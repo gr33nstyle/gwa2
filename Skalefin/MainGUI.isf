@@ -1,0 +1,167 @@
+; -- Created with ISN Form Studio 2 for ISN AutoIt Studio -- ;
+#include <StaticConstants.au3>
+#include <GUIConstantsEx.au3>
+#include <WindowsConstants.au3>
+#Include <GuiButton.au3>
+#include <EditConstants.au3>
+#include <ComboConstants.au3>
+
+$MainGUI = GUICreate("Skalefin",150,371,-1,-1,-1,-1)
+GUISetOnEvent($GUI_EVENT_CLOSE, "_Exit", $MainGUI)
+$characterCombo = GUICtrlCreateCombo("",30,10,100,21,-1,-1)
+GUICtrlSetData(-1,GetLoggedCharNames())
+$startBtn = GUICtrlCreateButton("Start",30,31,100,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_StartBtnHandler")
+$renderingBtn = GUICtrlCreateButton("Rendering",30,51,100,20,-1,-1)
+GUICtrlSetOnEvent(-1,"_RenderingBtnHandler")
+$logEdit = GUICtrlCreateEdit("",5,85,140,284,BitOr($ES_READONLY,$WS_HSCROLL),-1)
+GUICtrlSetColor(-1,"0x00FF00")
+GUICtrlSetBkColor(-1,"0x000000")
+
+
+
+#cs
+[gui]
+Handle_deklaration=default
+Handle_deklaration_const=false
+title=Skalefin
+breite=150
+hoehe=371
+style=-1
+exstyle=-1
+bgcolour=0xF0F0F0
+bgimage=none
+handle=MainGUI
+parent=
+code=
+xpos=-1
+ypos=-1
+center_gui=true
+title_textmode=normal
+isf_include_once=false
+only_controls_in_isf=false
+const_modus=default
+gui_event_close=_Exit
+gui_event_minimize=
+gui_event_restore=
+gui_event_maximize=
+gui_event_mousemove=
+gui_event_primarydown=
+gui_event_primaryup=
+gui_event_secoundarydown=
+gui_event_secoundaryup=
+gui_event_resized=
+gui_event_dropped=
+[0x000F0B0A]
+handle=394
+locked=0
+resize=
+code=
+type=combo
+x=30
+y=10
+width=100
+height=21
+text=GetLoggedCharNames()
+tooltip=
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+textcolour=0x000000
+bgcolour=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+id=characterCombo
+func=
+bgimage=
+order=0
+tabpage=-1
+iconindex=
+textmode=func
+[0x00081854]
+handle=395
+locked=0
+resize=
+code=
+type=button
+x=30
+y=31
+width=100
+height=20
+text=Start
+tooltip=
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+textcolour=0x000000
+bgcolour=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+id=startBtn
+func=_StartBtnHandler
+bgimage=
+order=2
+tabpage=-1
+iconindex=
+textmode=text
+[0x00081850]
+handle=396
+locked=0
+resize=
+code=
+type=button
+x=30
+y=51
+width=100
+height=20
+text=Rendering
+tooltip=
+state=$GUI_SHOW+$GUI_ENABLE
+style=
+exstyle=
+textcolour=0x000000
+bgcolour=
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+id=renderingBtn
+func=_RenderingBtnHandler
+bgimage=
+tabpage=-1
+order=3
+iconindex=
+textmode=text
+[0x00081FCE]
+handle=397
+locked=0
+resize=
+code=
+type=edit
+x=5
+y=85
+width=140
+height=284
+text=
+tooltip=
+state=$GUI_SHOW+$GUI_ENABLE
+style=$ES_READONLY+$WS_HSCROLL
+exstyle=
+textcolour=0x00FF00
+bgcolour=0x000000
+font=MS Sans Serif
+fontsize=8
+fontstyle=400
+fontattribute=0
+id=logEdit
+func=
+bgimage=
+order=4
+tabpage=-1
+iconindex=
+textmode=text
+#ce

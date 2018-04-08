@@ -1,0 +1,47 @@
+Equipment:
+
++20% ench +5e weapon
+shield with +10 vs plants or +10 vs lightning damage (very recommendable for the factions only verion, otherwise fail rate will go up significantly)
+
++1 expertise headpiece
++3 expertise rune
+rune of superior vigor
+3x rune of vitae
+5x blessed insignia
+
+Builds:
+
+All Campaigns: OgcTcZ/8ZiHRn5A6usBimE3R4AA
+Factions Only: OgcTcZ/85BAozOgNwJIAA3JcAA
+
+
+BOT WILL:
+
+travel to saint anjeka´s shrine
+load his skill template
+count runs, wins and fails
+prepare fast way out if it is the first run or the first run after a failed run
+put out his current action
+pickup (dragon roots, plant fibers, spiritwood planks, elementalist tomes, lockpicks, gold, all bramble bows, all event items)
+travel to guildhall when inventory has less than 6 free slots
+buy id kit and identify (all golds)
+buy salvage kit and salvage (dragon roots, bramble bows) 
+sell (all golds except the checked item types)
+store (full stacks of plant fibers and spiritwood planks, checked item types, all gold when he is done)
+then he will continue 
+
+
+BOT WILL NOT: 
+
+work with a different GWA2, the one used was adapted
+work as A/R (this just sucks, is way slower and does not work properly, since my version does not use winnowing)
+store random items in your inventory, he will either sell them or just keep them
+store event items
+he might sometimes not count fails and / or runs at all, when beeing stuck at the balling step (does not happen too often)
+
+
+ALSO NOTICE:
+
+factions only is slower and has a higher fail rate (all campaings somewhat close to 1 fail every 50-100 runs, factions only 1 fail every ~50 runs)
+look at the screen to get an impression of speed / fail rate
+again: will not work with a different GWA2, the one used was adapted
