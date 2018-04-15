@@ -1,7 +1,6 @@
 #NoTrayIcon
 #RequireAdmin
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=C:\Users\Vivec\Pictures\bot_v.ico
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs
 #################################
@@ -25,7 +24,7 @@ The Following mods were added:
 #ce
 
 
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include <ButtonConstants.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>

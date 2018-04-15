@@ -2,7 +2,7 @@
 #include "WindowsConstants.au3"
 #include "StaticConstants.au3"
 #include "GuiEdit.au3"
-#include "GWA2.au3"
+#include "../GWA2.au3"
 
 #NoTrayIcon
 
