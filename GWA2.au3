@@ -1,4 +1,4 @@
-;~ Version 3.7.3
+;~ Version 3.7.4
 ;~ After the Update from 2018/04/02
 
 #include-once
@@ -263,8 +263,8 @@ Func ScanGW()
 	Local $lPid
 
 	For $i = 1 To $lProcessList[0][0]
-		$mGWHwnd = $lProcessList[$i][1]
-		MemoryOpen($mGWHwnd)
+		$mGWHwnd = GetHwnd($lProcessList[$i][1])
+		MemoryOpen($lProcessList[$i][1])
 
 		If $mGWProcHandle Then
 			$lReturnArray[0] += 1
@@ -280,6 +280,19 @@ Func ScanGW()
 	Return $lReturnArray
 EndFunc
 
+Func GetHwnd($aProc)
+	Local $lWinList = WinList()
+	For $i = 1 To $lWinList[0][0]
+		If $lWinList[$i][0] <> "" Then
+			Local $lProc = WinGetProcess($lWinList[$i][1])
+			If $lProc = $aProc Then
+				Return $lWinList[$i][1]
+			EndIf
+		EndIf
+	Next
+	Return 0
+EndFunc
+
 ;~ Description: Injects GWA² into the game client. TODO fix usestringlog, useeventsystem
 Func Initialize($aGW, $bChangeTitle = True)
 	Local $lProcessList
@@ -287,8 +300,8 @@ Func Initialize($aGW, $bChangeTitle = True)
 		$lProcessList = processList("gw.exe")
 
 		For $i = 1 To $lProcessList[0][0]
-			$mGWHwnd = $lProcessList[$i][1]
-			MemoryOpen($mGWHwnd)
+			$mGWHwnd = GetHwnd($lProcessList[$i][1])
+			MemoryOpen($lProcessList[$i][1])
 
 			If $mGWProcHandle Then
 				If StringRegExp(ScanForCharname(), $aGW) = 1 Then ExitLoop
