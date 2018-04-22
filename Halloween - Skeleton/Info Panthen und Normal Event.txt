@@ -1,0 +1,10 @@
+Shared
+
+Zeile 10: TOA_ID zu CHANTRY_ID ändern für Halle bzw. Tempel der Zeitalter
+Zeile 11: TOA_ID zu CHANTRY_ID ändern für Halle bzw. Tempel der Zeitalter
+Zeile 12: TOA_ID zu CHANTRY_ID ändern für Halle bzw. Tempel der Zeitalter
+
+
+
+Zeile 13: PANTHEON für Pantheon Event
+Zeile 13: NORMAL für normales Halloween Event
