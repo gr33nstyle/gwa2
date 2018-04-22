@@ -8,7 +8,7 @@
 
 #ce ----------------------------------------------------------------------------
 
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include <ButtonConstants.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>
@@ -87,7 +87,7 @@ Switch (@GUI_CtrlId)
              Exit
           EndIf
 	  Else
-        Initialize(GUICtrlRead($cCharname),True,True,True)
+        Initialize(GUICtrlRead($cCharname),True) ;,True,True)
       EndIf
 		$boolrun = True
 		$bInitialized = True
