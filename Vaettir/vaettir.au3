@@ -106,11 +106,11 @@ Global $PickUp_Eggs				= True
 Global $PickUp_Bunnies			= True
 Global $PickUp_Pie				= True
    ;Alc
-Global $PickUp_BlueDrink		= True
+Global $PickUp_BlueDrink		= False
 Global $PickUp_Grog				= True
-Global $PickUp_Cider			= True
-Global $PickUp_HuntersAle		= True
-Global $PickUp_KrytanBrandy		= True
+Global $PickUp_Cider			= False
+Global $PickUp_HuntersAle		= False
+Global $PickUp_KrytanBrandy		= False
    ;Party
 Global $PickUp_Poppers			= True
 Global $PickUp_Rockets			= True
