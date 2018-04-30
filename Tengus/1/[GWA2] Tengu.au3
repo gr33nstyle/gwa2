@@ -8,7 +8,7 @@
 
 #ce ----------------------------------------------------------------------------
 
-#include "../GWA2.au3"
+#include "../../GWA2.au3"
 #include <ButtonConstants.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>

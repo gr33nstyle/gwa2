@@ -1,6 +1,7 @@
 ;~ pathing by none12345
 #include-once
-#include "GWA2.au3"
+#include "../GWA2.au3"
+#include "fix.au3"
 #include "proph_creation.au3"
 
 Global $WaypointCounter = 0

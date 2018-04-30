@@ -3,7 +3,7 @@
 #AutoIt3Wrapper_Icon=tengu.ico
 #AutoIt3Wrapper_Add_Constants=n
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
-#include "GWA2.au3"
+#include "../../GWA2.au3"
 #include <ButtonConstants.au3>
 #include <EditConstants.au3>
 #include <GUIConstantsEx.au3>

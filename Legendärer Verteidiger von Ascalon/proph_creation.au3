@@ -58,7 +58,8 @@ ____Issues______________________________________________________________________
 #include <ComboConstants.au3>
 #include <TabConstants.au3>
 #include <Array.au3>
-#include "GWA2.au3"
+#include "../GWA2.au3"
+#include "fix.au3"
 #include <Timers.au3>
 #include "profpaths.au3"
 
