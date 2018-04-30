@@ -1,5 +1,5 @@
-;~ Version 3.7.4
-;~ After the Update from 2018/04/02
+;~ Version 3.7.5
+;~ After the Update from 2018/04/30
 
 #include-once
 #RequireAdmin
@@ -123,59 +123,59 @@ Local $mChangeStatusPtr = DllStructGetPtr($mChangeStatus)
 #EndRegion CommandStructs
 
 #Region Headers
-$SalvageMaterialsHeader 		= 0x80
-$SalvageModHeader 				= 0x81
-$IdentifyItemHeader 			= 0x72
-$EquipItemHeader 				= 0x37
-$UseItemHeader 					= 0x84
-$PickUpItemHeader 				= 0x46
-$DropItemHeader 				= 0x33
-$MoveItemHeader 				= 0x78
-$AcceptAllItemsHeader 			= 0x79
-$DropGoldHeader 				= 0x36
-$ChangeGoldHeader 				= 0x82
-$AddHeroHeader 					= 0x24
-$KickHeroHeader 				= 0x25
-$KickAllHeroesHeader 			= 0x25
-$AddNpcHeader 					= 0xA6
-$KickNpcHeader 					= 0xAF
-$CancelHeroHeader 				= 0x1F
-$CancelAllHeader 				= 0x20
-$CommandHeroHeader 				= 0x1F
-$CommandAllHeader 				= 0x20
-$LockHeroTargetHeader 			= 0x19
-$SetHeroAggressionHeader 		= 0x18
-$ChangeHeroSkillSlotStateHeader = 0x1D
-$SetDisplayedTitleHeader 		= 0x5E
-$RemoveDisplayedTitleHeader 	= 0x5F
-$GoPlayerHeader 				= 0x3A
-$GoNPCHeader 					= 0x40
-$GoSignpostHeader 				= 0x58
-$AttackHeader 					= 0x2D
-$MoveMapHeader 					= 0xB8
-$ReturnToOutpostHeader 			= 0xAE
-$EnterChallengeHeader 			= 0xAC
-$EnterChallengeForeignHeader 	= 0xAC
-$TravelGHHeader 				= 0xB7
-$LeaveGHHeader 					= 0xB9
-$AcceptQuestHeader 				= 0x42
-$QuestRewardHeader 				= 0x42
-$AbandonQuestHeader 			= 0x13
-$CallTargetHeader 				= 0x29
-$CancelActionHeader 			= 0x2F
-$OpenChestHeader 				= 0x5A
-$DropBuffHeader 				= 0x30
-$LeaveGroupHeader 				= 0xA9
-$SwitchModeHeader 				= 0xA2
-$DonateFactionHeader 			= 0x3C
-$DialogHeader 					= 0x42
-$SkipCinematicHeader 			= 0x69
-$SetSkillbarSkillHeader 		= 0x62
-$LoadSkillBarHeader 			= 0x63
-$ChangeSecondProfessionHeader 	= 0x48
-$SendChatHeader					= 0x6A
-$SetAttributesHeader			= 0x11
-$DestroyItemHeader				= 0x6F
+$SalvageMaterialsHeader 		= 0x7D
+$SalvageModHeader 				= 0x7E
+$IdentifyItemHeader 			= 0x6F
+$EquipItemHeader 				= 0x34
+$UseItemHeader 					= 0x81
+$PickUpItemHeader 				= 0x43
+$DropItemHeader 				= 0x30
+$MoveItemHeader 				= 0x75
+$AcceptAllItemsHeader 			= 0x76
+$DropGoldHeader 				= 0x33
+$ChangeGoldHeader 				= 0x7F
+$AddHeroHeader 					= 0x22
+$KickHeroHeader 				= 0x23
+$KickAllHeroesHeader 			= 0x23
+$AddNpcHeader 					= 0xA3
+$KickNpcHeader 					= 0xAC
+$CancelHeroHeader 				= 0x1E
+$CancelAllHeader 				= 0x1F
+$CommandHeroHeader 				= 0x1E
+$CommandAllHeader 				= 0x1F
+$LockHeroTargetHeader 			= 0x18
+$SetHeroAggressionHeader 		= 0x17
+$ChangeHeroSkillSlotStateHeader = 0x1C
+$SetDisplayedTitleHeader 		= 0x5B
+$RemoveDisplayedTitleHeader 	= 0x5C
+$GoPlayerHeader 				= 0x37
+$GoNPCHeader 					= 0x3D
+$GoSignpostHeader 				= 0x55
+$AttackHeader 					= 0x2A
+$MoveMapHeader 					= 0xB4
+$ReturnToOutpostHeader 			= 0xAB
+$EnterChallengeHeader 			= 0xA9
+$EnterChallengeForeignHeader 	= 0xA9
+$TravelGHHeader 				= 0xB4
+$LeaveGHHeader 					= 0xB6
+$AcceptQuestHeader 				= 0x3F
+$QuestRewardHeader 				= 0x3F
+$AbandonQuestHeader 			= 0x12
+$CallTargetHeader 				= 0x27
+$CancelActionHeader 			= 0x2C
+$OpenChestHeader 				= 0x57
+$DropBuffHeader 				= 0x2D
+$LeaveGroupHeader 				= 0xA6
+$SwitchModeHeader 				= 0x9F
+$DonateFactionHeader 			= 0x39
+$DialogHeader 					= 0x3F
+$SkipCinematicHeader 			= 0x66
+$SetSkillbarSkillHeader 		= 0x5F
+$LoadSkillBarHeader 			= 0x60
+$ChangeSecondProfessionHeader 	= 0x45
+$SendChatHeader					= 0x67
+$SetAttributesHeader			= 0x10
+$DestroyItemHeader				= 0x6C
 #EndRegion Headers
 
 #Region Memory
