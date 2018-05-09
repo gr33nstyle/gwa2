@@ -2,7 +2,7 @@
 ;Pahnai-Salad.au3 by Alexander
 ;Erstellt mit ISN AutoIt Studio v. 1.02
 ;*****************************************
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Forms\GUI.isf"
 #include <Date.au3>
 #include <Array.au3>
@@ -91,11 +91,11 @@ Func Setup()
 	fastWayOut()
 EndFunc
 
-; Func fastWayOut() 
+; Func fastWayOut()
 ; @param: none
 ; prepares a better spawn
 ; @return: void
-Func fastWayOut() 
+Func fastWayOut()
 	Out("Preparing FastWayOut...")
 	moveTo(-8250, 14500)
 	Do
@@ -114,30 +114,30 @@ EndFunc
 ; function that is farming the ibogas
 ; @return: boolean returns true if the run was a success, returns false if it failed
 Func farmPetals()
-	
+
 	Local $Continue = True
 	Local $Spot
-	
+
 	Out("Starting run #" & $RunsTotal+1)
 	Out("Exiting town")
 	Do
 		Move(-9300, 17000)
 	Until WaitMapLoading($MAP_ID_PLAINS_OF_JARIN)
-	
+
 	For $Spot = 0 To 10 Step 1
 		$Continue = farmSpot($Spot, $FarmSpotsX[$Spot], $FarmSpotsY[$Spot])
-		If Not $Continue Then 
+		If Not $Continue Then
 			Out("Farm Spot " & $spot + 1 & "Failed")
 			Return False
 		EndIf
 	Next
-	
+
 	Return True
 EndFunc
 
 ; Func farmSpot($spot, $xpos, $ypos)
-; @param: $spot:int number of the spot -1, 
-;         $xpos:int position of the Player, 
+; @param: $spot:int number of the spot -1,
+;         $xpos:int position of the Player,
 ;         $ypos:int same
 ; runs to the farmspot and kills Ibogas in range.
 ; @return: boolean returns true if the bot farms the spot with success
@@ -146,13 +146,13 @@ Func farmSpot($spot, $xpos, $ypos)
 	Local $Continue = True
 	Out("Moving to #" & $spot + 1 & " spot")
 	$Continue = MoveAggroing($xpos, $ypos)
-	If Not $Continue Then 
+	If Not $Continue Then
 		Out("Moving Failed")
 		Return False
 	EndIf
 	Out("Killing")
 	$Continue = KillIbogas()
-	If Not $Continue Then 
+	If Not $Continue Then
 		Out("Killing Failed")
 		Return False
 	EndIf
@@ -163,7 +163,7 @@ EndFunc
 ; Func KillIbogas($range = 1300,  $pTimeout = 90000)
 ; @param: none
 ; function to kill the Ibogas around you
-; @return: boolean returns true if no problem happened and 
+; @return: boolean returns true if no problem happened and
 ;          false if the player died or something else gone wrong
 Func KillIbogas($range = 1300,  $pTimeout = 90000)
 	Local $TimeoutTimer = TimerInit()
@@ -173,14 +173,14 @@ Func KillIbogas($range = 1300,  $pTimeout = 90000)
 		Attack(GetNearestEnemyToAgent(-2))
 		Sleep(2000)
 	Until GetNumberOfFoesInRangeOfAgent(-2, 1300) = 0 Or GetIsDead(-2) Or TimerDiff($TimeoutTimer) > $pTimeout
-	
+
 	Local $Fail = GetIsDead(-2) Or TimerDiff($TimeoutTimer) > $pTimeout
 	Return Not $Fail
 EndFunc
 
 ; Func UseSkillEx($lSkill, $lTgt=-2, $aTimeout = 3000)
-; @param: $lSkill:int Skill to use, 
-;         $lTgt:int The Target of the skill, 
+; @param: $lSkill:int Skill to use,
+;         $lTgt:int The Target of the skill,
 ;         $aTimeout:int Timeout to cast the skill
 ; Uses a skill
 ; It will not use if I am dead, if the skill is not recharged, or if I don't have enough energy for it
@@ -248,7 +248,7 @@ Func _PickupLoot()
 		$distance = GetDistance($agent)
 	    If $distance > 2000 Then ContinueLoop
 		$lItem = GetItemByAgentID($i)
-		
+
 		If canPickupItem($lItem) Then
 			If $distance > 150 Then MoveTo(DllStructGetData($agent, 'X'), DllStructGetData($agent, 'Y'), 100)
 			PickUpItem($lItem)
@@ -261,23 +261,23 @@ EndFunc
 ; Func canPickupItem()
 ; @param: $Item:int agent of the item to check
 ; tests if we should pick up the item
-; @return: boolean returns true if the item should be picked up, 
+; @return: boolean returns true if the item should be picked up,
 ;          false if we don't want it
 Func canPickupItem($Item)
 	Local $lModelId = DllStructGetData($Item, "ModelID")
-	Switch $lModelId 
-		Case $ITEM_ID_IBOGA_PETALS 
+	Switch $lModelId
+		Case $ITEM_ID_IBOGA_PETALS
 			$IbogaPetals = $IbogaPetals + 1
-			Return True 
-		Case Else 
+			Return True
+		Case Else
 			Return False
 	EndSwitch
 	Return False
 EndFunc
 
 ; Func MoveAggroing($lDestX, $lDestY, $lRandom = 150)
-; @param: $lDestX:int Destination to move, 
-;         $lDestY:int same, 
+; @param: $lDestX:int Destination to move,
+;         $lDestY:int same,
 ;         $lRandom:int size of the area to move to
 ; moves to target location with anti stuck and maintains dash
 ; @return: returns true if successful moved, false if the bot died or another error occurred
@@ -302,7 +302,7 @@ Func MoveAggroing($lDestX, $lDestY, $lRandom = 150)
 	    If TimerDiff($stuckTimer) > 90000 Then Return False
 
 		MaintainDash()
-		
+
 		If DllStructGetData($lMe, 'MoveX') == 0 And DllStructGetData($lMe, 'MoveY') == 0 Then
 
 			$lBlocked += 1
@@ -341,7 +341,7 @@ EndFunc
 ; maintains Dwarven Stability and Dash while running
 ; @return: void
 Func MaintainDash()
-	If IsRecharged($DWARVEN_STABILITY) Then 
+	If IsRecharged($DWARVEN_STABILITY) Then
 		If GetEffect(2423) = 0 Or GetEffectTimeRemaining(2423) < 3000 Then
 			UseSkillEx($DWARVEN_STABILITY)
 		EndIf
@@ -406,7 +406,7 @@ EndFunc
 
 ; Func guiStartButton()
 ; @param: none
-; toggle function for $guiStartButton 
+; toggle function for $guiStartButton
 ; @return: void
 Func guiStartButton()
 	If $Running Then
@@ -428,7 +428,7 @@ EndFunc
 
 ; Func _Initialize($pCharacterName)
 ; @param: $pCharacterName:String the actual Charactername of the to initialized gw process
-; function to initialize the bot with the gw process and to change some parts of the gui afterwards if 
+; function to initialize the bot with the gw process and to change some parts of the gui afterwards if
 ; it's a success. else it will show a msgbox with the error. (Copy Pasta of Vivec)
 ; @return: void
 Func _Initialize($pCharacterName)

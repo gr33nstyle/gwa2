@@ -2,7 +2,7 @@
 ;Pahnai-Salad.au3 by Alexander
 ;Erstellt mit ISN AutoIt Studio v. 1.02
 ;*****************************************
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Forms\GUI.isf"
 #include <Date.au3>
 #include <Array.au3>
