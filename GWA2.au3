@@ -1,5 +1,6 @@
-;~ Version 3.7.5
-;~ After the Update from 2018/04/30
+; Version 3.7.10b
+; I can't program
+; After the Update from 2018/05/17
 
 #include-once
 #RequireAdmin
@@ -10,9 +11,11 @@ If @AutoItX64 Then
 EndIf
 
 #Region Declarations
+Local $mGWA2Version = '3.7.8'
 Local $mKernelHandle
 Local $mGWProcHandle
-Local $mGWHwnd
+Local $mGWProcessId
+Local $mGWWindowHandle
 Local $mMemory
 Local $mLabels[1][2]
 Local $mBase = 0x00DE0000
@@ -123,59 +126,52 @@ Local $mChangeStatusPtr = DllStructGetPtr($mChangeStatus)
 #EndRegion CommandStructs
 
 #Region Headers
-$SalvageMaterialsHeader 		= 0x7D
-$SalvageModHeader 				= 0x7E
-$IdentifyItemHeader 			= 0x6F
-$EquipItemHeader 				= 0x34
-$UseItemHeader 					= 0x81
-$PickUpItemHeader 				= 0x43
-$DropItemHeader 				= 0x30
-$MoveItemHeader 				= 0x75
-$AcceptAllItemsHeader 			= 0x76
-$DropGoldHeader 				= 0x33
-$ChangeGoldHeader 				= 0x7F
-$AddHeroHeader 					= 0x22
-$KickHeroHeader 				= 0x23
-$KickAllHeroesHeader 			= 0x23
-$AddNpcHeader 					= 0xA3
-$KickNpcHeader 					= 0xAC
-$CancelHeroHeader 				= 0x1E
-$CancelAllHeader 				= 0x1F
-$CommandHeroHeader 				= 0x1E
-$CommandAllHeader 				= 0x1F
-$LockHeroTargetHeader 			= 0x18
-$SetHeroAggressionHeader 		= 0x17
+$SalvageMaterialsHeader = 0x7F
+$SalvageModHeader = 0x80
+$IdentifyItemHeader = 0x71
+$EquipItemHeader = 0x36
+$UseItemHeader = 0x83
+$PickUpItemHeader = 0x45
+$DropItemHeader = 0x32
+$MoveItemHeader = 0x77
+$AcceptAllItemsHeader = 0x78
+$DropGoldHeader = 0x35
+$ChangeGoldHeader = 0x81
+$AddHeroHeader = 0x23
+$KickHeroHeader = 0x24
+$AddNpcHeader = 0xA5
+$KickNpcHeader = 0xAE
+$CommandHeroHeader = 0x1E
+$CommandAllHeader = 0x1F
+$LockHeroTargetHeader = 0x18
+$SetHeroAggressionHeader = 0x17
 $ChangeHeroSkillSlotStateHeader = 0x1C
-$SetDisplayedTitleHeader 		= 0x5B
-$RemoveDisplayedTitleHeader 	= 0x5C
-$GoPlayerHeader 				= 0x37
-$GoNPCHeader 					= 0x3D
-$GoSignpostHeader 				= 0x55
-$AttackHeader 					= 0x2A
-$MoveMapHeader 					= 0xB5
-$ReturnToOutpostHeader 			= 0xAB
-$EnterChallengeHeader 			= 0xA9
-$EnterChallengeForeignHeader 	= 0xA9
-$TravelGHHeader 				= 0xB4
-$LeaveGHHeader 					= 0xB6
-$AcceptQuestHeader 				= 0x3F
-$QuestRewardHeader 				= 0x3F
-$AbandonQuestHeader 			= 0x12
-$CallTargetHeader 				= 0x27
-$CancelActionHeader 			= 0x2C
-$OpenChestHeader 				= 0x57
-$DropBuffHeader 				= 0x2D
-$LeaveGroupHeader 				= 0xA6
-$SwitchModeHeader 				= 0x9F
-$DonateFactionHeader 			= 0x39
-$DialogHeader 					= 0x3F
-$SkipCinematicHeader 			= 0x66
-$SetSkillbarSkillHeader 		= 0x5F
-$LoadSkillBarHeader 			= 0x60
-$ChangeSecondProfessionHeader 	= 0x45
-$SendChatHeader					= 0x67
-$SetAttributesHeader			= 0x10
-$DestroyItemHeader				= 0x6C
+$SetDisplayedTitleHeader = 0x5D
+$RemoveDisplayedTitleHeader = 0x5E
+$GoPlayerHeader = 0x39
+$GoNPCHeader = 0x3F
+$GoSignpostHeader = 0x57
+$AttackHeader = 0x2C
+$MoveMapHeader = 0xB7
+$ReturnToOutpostHeader = 0xAD
+$EnterChallengeHeader = 0xAB
+$TravelGHHeader = 0xB6
+$LeaveGHHeader = 0xB8
+$AbandonQuestHeader = 0x12
+$CallTargetHeader = 0x28
+$CancelActionHeader = 0x2E
+$OpenChestHeader = 0x59
+$DropBuffHeader = 0x2F
+$LeavePartyHeader = 0xA8
+$SwitchModeHeader = 0xA1
+$DonateFactionHeader = 0x3B
+$DialogHeader = 0x41
+$SkipCinematicHeader = 0x68
+$SetSkillbarSkillHeader = 0x61
+$LoadSkillbarHeader = 0x62
+$ChangeSecondProfessionHeader = 0x47
+$SendChatHeader = 0x69
+$SetAttributesHeader = 0x10
 #EndRegion Headers
 
 #Region Memory
@@ -263,7 +259,6 @@ Func ScanGW()
 	Local $lPid
 
 	For $i = 1 To $lProcessList[0][0]
-		$mGWHwnd = GetHwnd($lProcessList[$i][1])
 		MemoryOpen($lProcessList[$i][1])
 
 		If $mGWProcHandle Then
@@ -281,46 +276,31 @@ Func ScanGW()
 EndFunc
 
 Func GetHwnd($aProc)
-	Local $lWinList = WinList()
-	For $i = 1 To $lWinList[0][0]
-		If $lWinList[$i][0] <> "" Then
-			Local $lProc = WinGetProcess($lWinList[$i][1])
-			If $lProc = $aProc Then
-				Return $lWinList[$i][1]
-			EndIf
-		EndIf
+	Local $wins = WinList()
+	For $i = 1 To UBound($wins)-1
+		If (WinGetProcess($wins[$i][1]) == $aProc) And (BitAND(WinGetState($wins[$i][1]), 2)) Then Return $wins[$i][1]
 	Next
-	Return 0
 EndFunc
 
 ;~ Description: Injects GWA² into the game client. 3rd and 4th arguments are here for legacy purposes
 Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
-	Local $lProcessList
 	If IsString($aGW) Then
-		$lProcessList = processList("gw.exe")
-
+		Local $lProcessList = processList("gw.exe")
 		For $i = 1 To $lProcessList[0][0]
-			$mGWHwnd = GetHwnd($lProcessList[$i][1])
-			MemoryOpen($lProcessList[$i][1])
-
+			$mGWProcessId = $lProcessList[$i][1]
+			$mGWWindowHandle = GetHwnd($mGWProcessId)
+			MemoryOpen($mGWProcessId)
 			If $mGWProcHandle Then
 				If StringRegExp(ScanForCharname(), $aGW) = 1 Then ExitLoop
 			EndIf
-
 			MemoryClose()
-
 			$mGWProcHandle = 0
 		Next
 	Else
-		$lProcessList = processList("gw.exe")
-
-		For $i = 1 To $lProcessList[0][0]
-			If $lProcessList[$i][1] = $aGW Then
-				MemoryOpen($aGW)
-				ScanForCharname()
-				ExitLoop
-			EndIf
-		Next
+		$mGWProcessId = $aGW
+		$mGWWindowHandle = GetHwnd($mGWProcessId)
+		MemoryOpen($aGW)
+		ScanForCharname()
 	EndIf
 
 	If $mGWProcHandle = 0 Then Return False
@@ -381,9 +361,7 @@ Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
 	SetValue('StringFilter2Start', '0x' & Hex($lTemp, 8))
 	SetValue('StringFilter2Return', '0x' & Hex($lTemp + 5, 8))
 	SetValue('StringLogStart', '0x' & Hex(GetScannedAddress('ScanStringLog', 35), 8))
-	SetValue('LoadFinishedStart', '0x' & Hex(GetScannedAddress('ScanLoadFinished', -13), 8))
-	SetValue('LoadFinishedReturn', '0x' & Hex(GetScannedAddress('ScanLoadFinished', -8), 8))
-
+	SetValue('LoadFinishedStart', '0x' & Hex(GetScannedAddress('ScanLoadFinished', 79), 8))
 	SetValue('PostMessage', '0x' & Hex(MemoryRead(GetScannedAddress('ScanPostMessage', 11)), 8))
 	SetValue('Sleep', MemoryRead(MemoryRead(GetValue('ScanSleep') + 8) + 3))
 	SetValue('SalvageFunction', MemoryRead(GetValue('ScanSalvageFunction') + 8) - 18)
@@ -452,8 +430,8 @@ Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
 	DllStructSetData($mMakeAgentArray, 1, GetValue('CommandMakeAgentArray'))
 	DllStructSetData($mChangeStatus, 1, GetValue('CommandChangeStatus'))
 
-	If $bChangeTitle Then WinSetTitle($mGWHwnd, '', 'Guild Wars - ' & GetCharname())
-	Return $mGWHwnd
+	If $bChangeTitle Then WinSetTitle($mGWWindowHandle, '', 'Guild Wars - ' & GetCharname())
+	Return $mGWWindowHandle
 EndFunc   ;==>Initialize
 
 ;~ Description: Internal use only.
@@ -486,7 +464,7 @@ Func Scan()
 	_('ScanEngine:')
 	AddPattern('5356DFE0F6C441')
 	_('ScanLoadFinished:')
-	AddPattern('AA4A7D00B44A7D00')
+	AddPattern('894DD88B4D0C8955DC8B')
 	_('ScanPostMessage:')
 	AddPattern('6A00680080000051FF15')
 	_('ScanTargetLog:')
@@ -857,18 +835,6 @@ Func MoveItem($aItem, $aBag, $aSlot)
 	Return SendPacket(0x10, $MoveItemHeader, $lItemID, $lBagID, $aSlot - 1)
 EndFunc   ;==>MoveItem
 
-Func DestroyItem($aItem)
-	Local $lItemID
-
-	If IsDllStruct($aItem) == 0 Then
-		$lItemID = $item
-	Else
-		$lItemID = DllStructGetData($aItem, "ID")
-	EndIf
-
-	Return SendPacket(0x8, $DestroyItemHeader, $lItemID)
-EndFunc
-
 ;~ Description: Accepts unclaimed items after a mission.
 Func AcceptAllItems()
 	Return SendPacket(0x8, $AcceptAllItemsHeader, DllStructGetData(GetBag(7), 'ID'))
@@ -1047,7 +1013,7 @@ EndFunc   ;==>KickHero
 
 ;~ Description: Kicks all heroes from the party.
 Func KickAllHeroes()
-	Return SendPacket(0x8, $KickAllHeroesHeader, 0x26)
+	Return SendPacket(0x8, $KickHeroHeader, 0x26)
 EndFunc   ;==>KickAllHeroes
 
 ;~ Description: Add a henchman to the party.
@@ -1063,12 +1029,12 @@ EndFunc   ;==>KickNpc
 ;~ Description: Clear the position flag from a hero.
 Func CancelHero($aHeroNumber)
 	Local $lAgentID = GetHeroID($aHeroNumber)
-	Return SendPacket(0x14, $CancelHeroHeader, $lAgentID, 0x7F800000, 0x7F800000, 0)
+	Return SendPacket(0x14, $CommandHeroHeader, $lAgentID, 0x7F800000, 0x7F800000, 0)
 EndFunc   ;==>CancelHero
 
 ;~ Description: Clear the position flag from all heroes.
 Func CancelAll()
-	Return SendPacket(0x10, $CancelAllHeader, 0x7F800000, 0x7F800000, 0)
+	Return SendPacket(0x10, $CommandAllHeader, 0x7F800000, 0x7F800000, 0)
 EndFunc   ;==>CancelAll
 
 ;~ Description: Place a hero's position flag.
@@ -1386,7 +1352,7 @@ EndFunc   ;==>EnterChallenge
 
 ;~ Description: Enter a foreign challenge mission/pvp.
 Func EnterChallengeForeign()
-	Return SendPacket(0x8, $EnterChallengeForeignHeader, 0)
+	Return SendPacket(0x8, $EnterChallengeHeader, 0)
 EndFunc   ;==>EnterChallengeForeign
 
 ;~ Description: Travel to your guild hall.
@@ -1407,12 +1373,12 @@ EndFunc   ;==>LeaveGH
 #Region Quest
 ;~ Description: Accept a quest from an NPC.
 Func AcceptQuest($aQuestID)
-	Return SendPacket(0x8, $AcceptQuestHeader, '0x008' & Hex($aQuestID, 3) & '01')
+	Return SendPacket(0x8, $DialogHeader, '0x008' & Hex($aQuestID, 3) & '01')
 EndFunc   ;==>AcceptQuest
 
 ;~ Description: Accept the reward for a quest.
 Func QuestReward($aQuestID)
-	Return SendPacket(0x8, $QuestRewardHeader, '0x008' & Hex($aQuestID, 3) & '07')
+	Return SendPacket(0x8, $DialogHeader, '0x008' & Hex($aQuestID, 3) & '07')
 EndFunc   ;==>QuestReward
 
 ;~ Description: Abandon a quest.
@@ -1835,7 +1801,7 @@ EndFunc   ;==>InvitePlayer
 ;~ Description: Leave your party.
 Func LeaveGroup($aKickHeroes = True)
 	If $aKickHeroes Then KickAllHeroes()
-	Return SendPacket(0x4, $LeaveGroupHeader)
+	Return SendPacket(0x4, $LeavePartyHeader)
 EndFunc   ;==>LeaveGroup
 
 ;~ Description: Switches to/from Hard Mode.
@@ -3587,7 +3553,7 @@ EndFunc   ;==>TolSleep
 
 ;~ Description: Returns window handle of Guild Wars.
 Func GetWindowHandle()
-	Return $mGWHwnd
+	Return $mGWWindowHandle
 EndFunc   ;==>GetWindowHandle
 
 ;~ Description: Returns the distance between two coordinate pairs.
@@ -4316,8 +4282,8 @@ Func CreateLoadFinished()
 	_('LoadClearStringsLoop:')
 	_('mov dword[eax],0')
 	_('inc ebx')
-	_('add eax,100')
-	_('cmp ebx,StringLogSize')
+	_('add eax,80')
+	_('cmp ebx,200')
 	_('jnz LoadClearStringsLoop')
 
 	_('xor ebx,ebx')
@@ -4326,7 +4292,7 @@ Func CreateLoadFinished()
 	_('mov dword[eax],0')
 	_('inc ebx')
 	_('add eax,4')
-	_('cmp ebx,TargetLogSize')
+	_('cmp ebx,200')
 	_('jnz LoadClearTargetsLoop')
 
 	_('push 5')
@@ -4336,9 +4302,9 @@ Func CreateLoadFinished()
 	_('call dword[PostMessage]')
 
 	_('popad')
-	_('mov edx,dword[esi+1C]')
-	_('mov ecx,edi')
-	_('ljmp LoadFinishedReturn')
+	_('mov esp,ebp')
+	_('pop ebp')
+	_('retn 10')
 EndFunc   ;==>CreateLoadFinished
 
 ;~ Description: Internal use only.
