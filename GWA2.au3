@@ -1,6 +1,6 @@
-; Version 3.7.10b
-; I can't program
-; After the Update from 2018/05/17
+Local $mGWA2Version = '3.7.10C' ; GWA2 Version
+; ADDED A BUNCH OF STUFF
+; After the Update from 2018/05/18
 
 #include-once
 #RequireAdmin
@@ -11,7 +11,6 @@ If @AutoItX64 Then
 EndIf
 
 #Region Declarations
-Local $mGWA2Version = '3.7.8'
 Local $mKernelHandle
 Local $mGWProcHandle
 Local $mGWProcessId
@@ -64,6 +63,7 @@ Local $mTraderCostValue
 Local $mDisableRendering
 Local $mAgentCopyCount
 Local $mAgentCopyBase
+Local $mCharslots
 #EndRegion Declarations
 
 #Region CommandStructs
@@ -162,7 +162,7 @@ $CallTargetHeader = 0x28
 $CancelActionHeader = 0x2E
 $OpenChestHeader = 0x59
 $DropBuffHeader = 0x2F
-$LeavePartyHeader = 0xA8
+$LeaveGroupHeader = 0xA8
 $SwitchModeHeader = 0xA1
 $DonateFactionHeader = 0x3B
 $DialogHeader = 0x41
@@ -318,7 +318,7 @@ Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
 	$mMapLoading = $mAgentBase - 240
 	$mCurrentTarget = $mAgentBase - 1280
 	SetValue('PacketLocation', '0x' & Hex(MemoryRead(GetScannedAddress('ScanBaseOffset', -3)), 8))
-	$mPing = MemoryRead(GetScannedAddress('ScanPing', -8))
+	$mPing = MemoryRead(GetScannedAddress('ScanPing', 7))
 	$mMapID = MemoryRead(GetScannedAddress('ScanMapID', 71))
 	$mLoggedIn = MemoryRead(GetScannedAddress('ScanLoggedIn', -3)) + 4
 	$mRegion = MemoryRead(GetScannedAddress('ScanRegion', 8))
@@ -328,7 +328,8 @@ Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
 	$mBuildNumber = MemoryRead(GetScannedAddress('ScanBuildNumber', 0x54))
 	$mZoomStill = GetScannedAddress("ScanZoomStill", -1)
 	$mZoomMoving = GetScannedAddress("ScanZoomMoving", 5)
-	$mCurrentStatus = MemoryRead(GetScannedAddress('ScanChangeStatusFunction', 33))
+	$mCurrentStatus = MemoryRead(GetScannedAddress('ScanChangeStatusFunction', -3))
+	$mCharslots = MemoryRead(GetScannedAddress('ScanCharslots', 22))
 
 	Local $lTemp
 	$lTemp = GetScannedAddress('ScanEngine', -16)
@@ -354,10 +355,10 @@ Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
 	$lTemp = GetScannedAddress('ScanTraderHook', -7)
 	SetValue('TraderHookStart', '0x' & Hex($lTemp, 8))
 	SetValue('TraderHookReturn', '0x' & Hex($lTemp + 5, 8))
-	$lTemp = GetScannedAddress('ScanStringFilter1', -2)
+	$lTemp = GetScannedAddress('ScanStringFilter1', 29)
 	SetValue('StringFilter1Start', '0x' & Hex($lTemp, 8))
 	SetValue('StringFilter1Return', '0x' & Hex($lTemp + 5, 8))
-	$lTemp = GetScannedAddress('ScanStringFilter2', -2)
+	$lTemp = GetScannedAddress('ScanStringFilter2', 97)
 	SetValue('StringFilter2Start', '0x' & Hex($lTemp, 8))
 	SetValue('StringFilter2Return', '0x' & Hex($lTemp + 5, 8))
 	SetValue('StringLogStart', '0x' & Hex(GetScannedAddress('ScanStringLog', 35), 8))
@@ -378,8 +379,8 @@ Func Initialize($aGW, $bChangeTitle = True, $notUsed1 = 0, $notUsed2 = 0)
 	SetValue('BuyItemFunction', '0x' & Hex(GetScannedAddress('ScanBuyItemFunction', 1), 8))
 	SetValue('RequestQuoteFunction', '0x' & Hex(GetScannedAddress('ScanRequestQuoteFunction', -2), 8))
 	SetValue('TraderFunction', '0x' & Hex(GetScannedAddress('ScanTraderFunction', -71), 8))
-	SetValue('ClickToMoveFix', '0x' & Hex(GetScannedAddress("ScanClickToMoveFix", 1), 8))
-	SetValue('ChangeStatusFunction', '0x' & Hex(GetScannedAddress("ScanChangeStatusFunction", 1), 8))
+	SetValue('ClickToMoveFix', '0x' & Hex(GetScannedAddress("ScanClickToMoveFix", 30), 8))
+	SetValue('ChangeStatusFunction', '0x' & Hex(GetScannedAddress("ScanChangeStatusFunction", 12), 8))
 
 	SetValue('QueueSize', '0x00000010')
 	SetValue('SkillLogSize', '0x00000010')
@@ -474,7 +475,7 @@ Func Scan()
 	_('ScanMoveFunction:')
 	AddPattern('558BEC83EC2056578BF98D4DF0')
 	_('ScanPing:')
-	AddPattern('908D41248B49186A30')
+	AddPattern('C390908BD1B9')
 	_('ScanMapID:')
 	AddPattern('B07F8D55')
 	_('ScanLoggedIn:')
@@ -506,9 +507,9 @@ Func Scan()
 	_('ScanStringLog:')
 	AddPattern('893E8B7D10895E04397E08')
 	_('ScanStringFilter1:')
-	AddPattern('51568B7508578BF9833E00')
+	AddPattern('5E8BE55DC204008B55088BCE52')
 	_('ScanStringFilter2:')
-	AddPattern('515356578BF933D28B4F2C')
+	AddPattern('D85DF85F5E5BDFE0F6C441')
 	_('ScanActionFunction:')
 	AddPattern('8B7D0883FF098BF175116876010000')
 	_('ScanActionBase:')
@@ -534,7 +535,7 @@ Func Scan()
 	_('ScanSkillTimer:')
 	AddPattern('85c974158bd62bd183fa64')
 	_('ScanClickToMoveFix:')
-	AddPattern('3DD301000074')
+	AddPattern('568BF1578B460883F80F')
 	_('ScanZoomStill:')
 	AddPattern('3B448BCB')
 	_('ScanZoomMoving:')
@@ -542,7 +543,9 @@ Func Scan()
 	_('ScanBuildNumber:')
 	AddPattern('8D8500FCFFFF8D')
 	_('ScanChangeStatusFunction:')
-	AddPattern('568BF183FE047C146811020000')
+	AddPattern('C390909090909090909090568BF183FE04')
+	_('ScanCharslots:')
+	AddPattern('8B551041897E38897E3C897E34897E48897E4C890D')
 
 	_('ScanProc:')
 	_('pushad')
@@ -685,7 +688,7 @@ EndFunc   ;==>ScanForCharname
 #Region Commands
 #Region Item
 ;~ Description: Starts a salvaging session of an item.
-Func StartSalvage($aItem)
+Func StartSalvage($aItem, $aExpert = False)
 	Local $lOffset[4] = [0, 0x18, 0x2C, 0x690]
 	Local $lSalvageSessionID = MemoryReadPtr($mBasePointer, $lOffset)
 
@@ -694,12 +697,17 @@ Func StartSalvage($aItem)
 	Else
 		Local $lItemID = DllStructGetData($aItem, 'ID')
 	EndIf
-
-	Local $lSalvageKit = FindSalvageKit()
+	
+	Local $lSalvageKit = 0
+	If $aExpert Then
+		$lSalvageKit = FindExpertSalvageKit()
+	Else
+		$lSalvageKit = FindSalvageKit()
+	EndIf
 	If $lSalvageKit = 0 Then Return
 
 	DllStructSetData($mSalvage, 2, $lItemID)
-	DllStructSetData($mSalvage, 3, FindSalvageKit())
+	DllStructSetData($mSalvage, 3, $lSalvageKit)
 	DllStructSetData($mSalvage, 4, $lSalvageSessionID[1])
 
 	Enqueue($mSalvagePtr, 16)
@@ -863,15 +871,33 @@ Func BuyItem($aItem, $aQuantity, $aValue)
 	Enqueue($mBuyItemPtr, 16)
 EndFunc   ;==>BuyItem
 
-;~ Description: Buys an ID kit.
+;~ Description: Legacy function, use BuyIdentificationKit instead.
 Func BuyIDKit($aQuantity = 1)
-	BuyItem(5, $aQuantity, 100)
+	BuyIdentificationKit($aQuantity)
 EndFunc   ;==>BuyIDKit
 
-;~ Description: Buys a superior ID kit.
+;~ Description: Buys an ID kit.
+Func BuyIdentificationKit($aQuantity = 1)
+	BuyItem(5, $aQuantity, 100)
+EndFunc   ;==>BuyIdentificationKit
+
+;~ Description: Legacy function, use BuySuperiorIdentificationKit instead.
 Func BuySuperiorIDKit($aQuantity = 1)
-	BuyItem(6, $aQuantity, 500)
+	BuySuperiorIdentificationKit($Quantity)
 EndFunc   ;==>BuySuperiorIDKit
+
+;~ Description: Buys a superior ID kit.
+Func BuySuperiorIdentificationKit($aQuantity = 1)
+	BuyItem(6, $aQuantity, 500)
+EndFunc   ;==>BuySuperiorIdentificationKit
+
+func BuySalvageKit($aQuantity = 1)
+	buyItem(2, $aQuantity, 100)
+endFunc   ;==>buySalvageKit
+
+func BuyExpertSalvageKit($aQuantity = 1)
+	buyItem(3, $aQuantity, 400)
+endFunc   ;==>buyExpertSalvageKit
 
 ;~ Description: Request a quote to buy an item from a trader. Returns true if successful.
 Func TraderRequest($aModelID, $aExtraID = -1)
@@ -1196,7 +1222,7 @@ Func GoToNPC($aAgent)
 			GoNPC($aAgent)
 		EndIf
 	Until ComputeDistance(DllStructGetData($lMe, 'X'), DllStructGetData($lMe, 'Y'), DllStructGetData($aAgent, 'X'), DllStructGetData($aAgent, 'Y')) < 250 Or $lBlocked > 14
-	Sleep(GetPing() + Random(1500, 2000, 1))
+	Sleep(GetPing() + 300)
 EndFunc   ;==>GoToNPC
 
 ;~ Description: Run to a signpost.
@@ -1801,7 +1827,7 @@ EndFunc   ;==>InvitePlayer
 ;~ Description: Leave your party.
 Func LeaveGroup($aKickHeroes = True)
 	If $aKickHeroes Then KickAllHeroes()
-	Return SendPacket(0x4, $LeavePartyHeader)
+	Return SendPacket(0x4, $LeaveGroupHeader)
 EndFunc   ;==>LeaveGroup
 
 ;~ Description: Switches to/from Hard Mode.
@@ -1966,10 +1992,9 @@ EndFunc   ;==>SetMaxMemory
 
 #Region Online Status
  ;~ Description: Change online status. 0 = Offline, 1 = Online, 2 = Do not disturb, 3 = Away
- Func SetPlayerStatus($iStatus)
-    If (($iStatus >= 0 And $iStatus <= 3) And (GetPlayerStatus() <> $iStatus)) Then
-        DllStructSetData($mChangeStatus, 2, $iStatus)
-
+ Func SetPlayerStatus($aStatus)
+    If ($aStatus >= 0 And $aStatus <= 3) And GetPlayerStatus() <> $aStatus Then
+        DllStructSetData($mChangeStatus, 2, $aStatus)
         Enqueue($mChangeStatusPtr, 8)
         Return True
     Else
@@ -2253,11 +2278,29 @@ Func GetRarity($aItem)
 	Return MemoryRead($lPtr, 'ushort')
 EndFunc   ;==>GetRarity
 
-;~ Description: Tests if an item is identified.
+;~ Description: Returns if material is Rare.
+Func GetIsRareMaterial($aItem)
+	If Not IsDllStruct($aItem) Then $aItem = GetItemByItemID($aItem)
+	If DllStructGetData($aItem, "Type") <> 11 Then Return False
+	Return Not GetIsCommonMaterial($aItem)
+EndFunc   ;==>GetIsRareMaterial
+
+;~ Description: Returns if material is Common.
+Func GetIsCommonMaterial($aItem)
+	If Not IsDllStruct($aItem) Then $aItem = GetItemByItemID($aItem)
+	Return BitAND(DllStructGetData($aItem, "Interaction"), 0x20) <> 0
+EndFunc   ;==>GetIsCommonMaterial
+
+;~ Description: Legacy function, use GetIsIdentified instead.
 Func GetIsIDed($aItem)
+	Return GetIsIdentified($aItem)
+EndFunc   ;==>GetIsIDed
+
+;~ Description: Tests if an item is identified.
+Func GetIsIdentified($aItem)
 	If Not IsDllStruct($aItem) Then $aItem = GetItemByItemID($aItem)
 	Return BitAND(DllStructGetData($aItem, 'interaction'), 1) > 0
-EndFunc   ;==>GetIsIDed
+EndFunc   ;==>GetIsIdentified
 
 ;~ Description: Returns a weapon or shield's minimum required attribute.
 Func GetItemReq($aItem)
@@ -2402,7 +2445,7 @@ Func FindSalvageKit()
 	Local $lItem
 	Local $lKit = 0
 	Local $lUses = 101
-	For $i = 1 To 16
+	For $i = 1 To 4
 		For $j = 1 To DllStructGetData(GetBag($i), 'Slots')
 			$lItem = GetItemBySlot($i, $j)
 			Switch DllStructGetData($lItem, 'ModelID')
@@ -2411,6 +2454,23 @@ Func FindSalvageKit()
 						$lKit = DllStructGetData($lItem, 'ID')
 						$lUses = DllStructGetData($lItem, 'Value') / 2
 					EndIf
+				Case Else
+					ContinueLoop
+			EndSwitch
+		Next
+	Next
+	Return $lKit
+EndFunc   ;==>FindSalvageKit
+
+;~ Description: Returns item ID of expert salvage kit in inventory.
+Func FindExpertSalvageKit()
+	Local $lItem
+	Local $lKit = 0
+	Local $lUses = 101
+	For $i = 1 To 4
+		For $j = 1 To DllStructGetData(GetBag($i), 'Slots')
+			$lItem = GetItemBySlot($i, $j)
+			Switch DllStructGetData($lItem, 'ModelID')
 				Case 2991
 					If DllStructGetData($lItem, 'Value') / 8 < $lUses Then
 						$lKit = DllStructGetData($lItem, 'ID')
@@ -2427,14 +2487,19 @@ Func FindSalvageKit()
 		Next
 	Next
 	Return $lKit
-EndFunc   ;==>FindSalvageKit
+EndFunc   ;==>FindExpertSalvageKit
+
+;~ Description: Legacy function, use FindIdentificationKit instead.
+Func FindIDKit()
+	Return FindIdentificationKit()
+EndFunc   ;==>FindIDKit
 
 ;~ Description: Returns item ID of ID kit in inventory.
-Func FindIDKit()
+Func FindIdentificationKit()
 	Local $lItem
 	Local $lKit = 0
 	Local $lUses = 101
-	For $i = 1 To 16
+	For $i = 1 To 4
 		For $j = 1 To DllStructGetData(GetBag($i), 'Slots')
 			$lItem = GetItemBySlot($i, $j)
 			Switch DllStructGetData($lItem, 'ModelID')
@@ -2454,7 +2519,7 @@ Func FindIDKit()
 		Next
 	Next
 	Return $lKit
-EndFunc   ;==>FindIDKit
+EndFunc   ;==>FindIdentificationKit
 
 ;~ Description: Returns the item ID of the quoted item.
 Func GetTraderCostID()
@@ -3483,9 +3548,15 @@ EndFunc   ;==>GetQuestByID
 Func GetCharname()
 	Return MemoryRead($mCharname, 'wchar[30]')
 EndFunc   ;==>GetCharname
+
 ;~ Description: Returns if you're logged in.
 Func GetLoggedIn()
 	Return MemoryRead($mLoggedIn)
+EndFunc   ;==>GetLoggedIn
+
+;~ Description: Returns the number of character slots you have. Only works on character select.
+Func GetCharacterSlots()
+	Return MemoryRead($mCharslots)
 EndFunc   ;==>GetLoggedIn
 
 ;~ Description: Returns language currently being used.
@@ -4628,10 +4699,10 @@ Func CreateCommands()
 	_('mov dword[AgentCopyCount],edx')
 	_('ljmp CommandReturn')
 
-    _('CommandChangeStatus:')
-    _('mov ecx,dword[eax+4]')
-    _('call ChangeStatusFunction')
-    _('ljmp CommandReturn')
+	_('CommandChangeStatus:')
+	_('mov ecx,dword[eax+4]')
+	_('call ChangeStatusFunction')
+	_('ljmp CommandReturn')
 EndFunc   ;==>CreateCommands
 #EndRegion Modification
 
