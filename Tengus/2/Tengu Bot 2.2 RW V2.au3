@@ -181,7 +181,7 @@ Func EventHandler()
 				GUICtrlSetState($bStart, $GUI_ENABLE)
 				WinSetTitle($GUI, "", GetCharname() & " - Tengubot")
 				$bInitialized = True
-				$GWPID = $mGWHwnd
+				;$GWPID = $mGWWindowHandle
 			EndIf
 		Case $disableGraph
 			ClearMemory()
