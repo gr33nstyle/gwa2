@@ -846,3 +846,30 @@ Func pause_bot($message = "")
    out("bot is paused ...")
    Return True
 EndFunc
+
+
+
+;Fixes for new gwa2
+
+Func CountInventoryItem($ItemID)
+   Local $count = 0
+   Local $lItemInfo
+   For $i = 1 To 4
+	  For $j = 0 To DllStructGetData(GetBag($i), 'Slots') - 1
+		 $lItemInfo = GetItemBySlot($i, $j)
+		 If DllStructGetData($lItemInfo, 'ModelID') = $ItemID Then $count += DllStructGetData($lItemInfo, 'quantity')
+	  Next
+   Next
+   Return $count
+EndFunc   ;==>CountInventoryItem
+
+Func CountFreeSlots($NumOfBags = 4)
+   Local $FreeSlots, $Slots
+
+   For $Bag = 1 to $NumOfBags
+	  $Slots += DllStructGetData(GetBag($Bag), 'Slots')
+	  $Slots -= DllStructGetData(GetBag($Bag), 'ItemsCount')
+   Next
+
+   Return $Slots
+EndFunc
