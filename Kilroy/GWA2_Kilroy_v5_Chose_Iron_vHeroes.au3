@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #include-once
-#include "GWA2_new.au3"
+#include "../GWA2.au3"
 #include <Array.au3>
 #include <GUIConstantsEx.au3>
 #include <StaticConstants.au3>
@@ -1178,13 +1178,13 @@ Func SurvivorRank($Survivor = 1)
 	EndSwitch
 EndFunc   ;==>Rank
 
-Func SetDisplayedTitle($aTitle = 0)
-	If $aTitle Then
-		Return SendPacket(0x8, 0x51, $aTitle)
-	Else
-		Return SendPacket(0x4, 0x52)
-	EndIf
-EndFunc   ;==>SetDisplayedTitle
+;~ Func SetDisplayedTitle($aTitle = 0)
+;~ 	If $aTitle Then
+;~ 		Return SendPacket(0x8, 0x51, $aTitle)
+;~ 	Else
+;~ 		Return SendPacket(0x4, 0x52)
+;~ 	EndIf
+;~ EndFunc   ;==>SetDisplayedTitle
 
 Func lif($cond, $ret, $ret2 = "")
 	If $cond Then Return $ret
