@@ -3,7 +3,7 @@
 #include <GUIConstantsEx.au3>
 #include <StaticConstants.au3>
 #include <WindowsConstants.au3>
-#include "GWA2.au3"
+#include "../GWA2.au3"
 
 #Region BotGlobals
 Global $RARITY_Gold = 2624, $RARITY_Green = 2627
@@ -96,7 +96,7 @@ If $FirstRun Then
    If GetMapID() <> 349 Then travelTo(349)
 
     upd("Loading Skills")
-	ClearAttributes()
+	;ClearAttributes()
     LoadSkillTemplate("OgcTcZ/8ZiHRn5A6usBimE3R4AA")
 
     GoOutside()
