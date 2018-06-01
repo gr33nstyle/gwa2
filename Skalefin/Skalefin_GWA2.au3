@@ -1,4 +1,4 @@
-#include "GWA2p.au3"
+#include "../GWA2.au3"
 #include "GWA2Addons.au3"
 #include "GUIHandler.au3"
 #include "Misc.au3"
@@ -30,7 +30,7 @@ If $CmdLine[0] > 0 And $CmdLine[1] <> "" Then
 	InitFromCmdLine()
 EndIf
 
-While True	
+While True
 	If $Running Then
 		Local $RunSuccess = FarmSkalefins()
 		If $RunSuccess Then
@@ -42,17 +42,17 @@ While True
 		WinSetTitle($MainGui, "", $characterName & " | " & $RunsTotal & "[" & $RunsSuccess & "/" & $RunsFail & "]")
 		If Mod($RunsTotal, 10) = 7 Then _PurgeHook()
 	EndIf
-		
+
 Wend
 
 Func FarmSkalefins()
 	If Not $Initialized Then Setup()
-	
+
 	If GetMapID() <> $MAP_ID_JOKANUR Then
 		TravelTo($MAP_ID_JOKANUR)
 		WaitMapLoading($MAP_ID_JOKANUR)
 	EndIf
-		
+
 	Out("Starting run #" & $RunsTotal+1)
 	Out("Exiting town")
 	MoveTo(602, 35)
@@ -60,9 +60,9 @@ Func FarmSkalefins()
 	Do
 		Move(-2673, -1121)
 	Until WaitMapLoading($MAP_ID_FAHRANUR) ;farm area MAP ID
-	
+
 	Local $Continue = True
-	
+
 	Out("Moving to first spot")
 	ChangeWeaponSet($WEAPON_SET_STAFF)
 	$Continue = MoveAggroing(17621, 12247)
@@ -123,7 +123,7 @@ Func FarmSkalefins()
 	Out("Starting next round")
 	TravelTo($MAP_ID_JOKANUR)
 	WaitMapLoading($MAP_ID_JOKANUR)
-	
+
 	Return True
 EndFunc
 
@@ -138,30 +138,30 @@ EndFunc
 
 Func KillSkales($pRecastVos = False, $pTimeout = 90000)
 	Local $TimeoutTimer = TimerInit()
-	
+
 	UseSkillEx($SAND_SHARDS)
 	UseSkillEx($MYSTIC_REGENERATION)
 	UseSkillEx($VOW_OF_STRENGTH)
-	
+
 	ChangeWeaponSet($WEAPON_SET_SCYTHE)
 	Sleep(2000)
-	
+
 	UseSkillEx($STAGGERING_FORCE)
 	UseSkillEx($EREMITES_ATTACK, GetNearestEnemyToAgent(-2))
-	
+
 	Do
 		If IsRecharged($SAND_SHARDS) Then UseSkillEx($SAND_SHARDS)
 		If IsRecharged($VOW_OF_STRENGTH) And $pRecastVos Then UseSkillEx($VOW_OF_STRENGTH)
 		Attack(GetNearestEnemyToAgent(-2))
 		Sleep(2500)
 	Until GetNumberOfFoesInRangeOfAgent(-2, 1300) = 0 Or GetIsDead(-2) Or TimerDiff($TimeoutTimer) > $pTimeout
-	
+
 	Local $Fail = GetIsDead(-2) Or TimerDiff($TimeoutTimer) > $pTimeout
 	Return Not $Fail
 EndFunc
 
 Func MaintainDash()
-	If IsRecharged($DWARVEN_STABILITY) Then 
+	If IsRecharged($DWARVEN_STABILITY) Then
 		If GetEffect(2423) = 0 Or GetEffectTimeRemaining(2423) < 3000 Then
 			UseSkillEx($DWARVEN_STABILITY)
 		EndIf
