@@ -26,7 +26,7 @@
 #EndRegion About
 
 #include <ButtonConstants.au3>
-#include <GWA2.au3>
+#include "../GWA2.au3"
 #include <ComboConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <StaticConstants.au3>
@@ -42,6 +42,7 @@ Opt("GUIOnEventMode", True)
 Opt("GUICloseOnESC", False)
 Global Const $WEAPON_SLOT_SCYTHE = 1
 Global Const $WEAPON_SLOT_STAFF = 2
+Global Const $PickupGolds = False
 Global $Runs = 0
 Global $Fails = 0
 Global $Drops = 0
@@ -473,7 +474,7 @@ Func CanPickUp($lItem)
    If $ModelID == 2511 And GetGoldCharacter() < 99000 Then Return True	;2511 = Gold Coins
    If CountFreeSlots() < 4 Then Return False
    Local $rarity = GetRarity($lItem)
-   If $rarity == 2624 Then Return True	;2624 = golden Items
+   If $rarity == 2624 AND $PickupGolds Then Return True	;2624 = golden Items
    Return False	;uncomment if you want to pickup blue/purple armors for runes/insignias
    If $rarity == 2623 Or $rarity == 2626 Then	;2623 = blue Items	;2626 = purple Items
 	  If $ModelID == 1154 Or $ModelID == 1156 Or $ModelID == 1159 Then Return True	;sensali Armor
@@ -555,14 +556,14 @@ Func FindCheapSalvageKit()
    Return $Kit
 EndFunc
 
-Func BuySalvageKit()
-   WithdrawGold(100)
-   GoToMerch()
-   RndSleep(500)
-   BuyItem(2, 1, 100)
-   Sleep(1500)
-   If FindCheapSalvageKit() = 0 Then BuySalvageKit()
-EndFunc
+;Func BuySalvageKit()
+;   WithdrawGold(100)
+;   GoToMerch()
+;   RndSleep(500)
+;  BuyItem(2, 1, 100)
+;   Sleep(1500)
+;   If FindCheapSalvageKit() = 0 Then BuySalvageKit()
+;EndFunc
 
 Func GoToMerch()
    If GetMapLoading() == 2 Then Disconnected()
@@ -700,4 +701,39 @@ Func _exit()
    EndIf
    Exit
 EndFunc
+
+;~ Description: Use a skill and wait for it to be used.
+Func UseSkillEx($lSkill, $lTgt = -2, $aTimeout = 3000)
+    If GetIsDead(-2) Then Return
+    If Not IsRecharged($lSkill) Then Return
+    Local $Skill = GetSkillByID(GetSkillBarSkillID($lSkill, 0))
+    Local $Energy = StringReplace(StringReplace(StringReplace(StringMid(DllStructGetData($Skill, 'Unknown4'), 6, 1), 'C', '25'), 'B', '15'), 'A', '10')
+    If GetEnergy(-2) < $Energy Then Return
+    Local $lAftercast = DllStructGetData($Skill, 'Aftercast')
+    Local $lDeadlock = TimerInit()
+    UseSkill($lSkill, $lTgt)
+    Do
+	    Sleep(50)
+	    If GetIsDead(-2) = 1 Then Return
+	    Until (Not IsRecharged($lSkill)) Or (TimerDiff($lDeadlock) > $aTimeout)
+    Sleep($lAftercast * 1000)
+EndFunc   ;==>UseSkillEx
+
+;~ Description: Returns is a skill is recharged.
+Func IsRecharged($lSkill)
+    Return GetSkillBarSkillRecharge($lSkill) == 0
+EndFunc   ;==>IsRecharged
+
 #EndRegion Functions
+
+;fixes for new gwa2
+Func CountFreeSlots($NumOfBags = 4)
+   Local $FreeSlots, $Slots
+
+   For $Bag = 1 to $NumOfBags
+	  $Slots += DllStructGetData(GetBag($Bag), 'Slots')
+	  $Slots -= DllStructGetData(GetBag($Bag), 'ItemsCount')
+   Next
+
+   Return $Slots
+EndFunc
