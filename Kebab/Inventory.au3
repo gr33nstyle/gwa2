@@ -1,5 +1,5 @@
 #include-once
-#include "GWA2.au3"
+#include "../GWA2.au3"
 
 #region Configuration
 	;========> OPTION
@@ -106,17 +106,17 @@ Func salvageRemaining($lastBag = 4)
 	Return $count
 EndFunc
 
-Func buySalvageKit($quantity)
-	If $quantity = 0 Then Return False
-	If Not findMerchant() Then Return False
-	Local $kitArr = kitInfo($salvageKit)
-	If Not isArray($kitArr) Then Return False
-	GoToNPC(findMerchant())
-	WithdrawGold($kitArr[2]*$quantity)
-	sleep(GetPing() + 100)
-	BuyItem($kitArr[1], $quantity, $kitArr[2])
-	sleep(GetPing() + 250)
-EndFunc
+;~ ;Func buySalvageKit($quantity)
+;~ 	If $quantity = 0 Then Return False
+;~ 	If Not findMerchant() Then Return False
+;~ 	Local $kitArr = kitInfo($salvageKit)
+;~ 	If Not isArray($kitArr) Then Return False
+;~ 	GoToNPC(findMerchant())
+;~ 	WithdrawGold($kitArr[2]*$quantity)
+;~ 	sleep(GetPing() + 100)
+;~ 	BuyItem($kitArr[1], $quantity, $kitArr[2])
+;~ 	sleep(GetPing() + 250)
+;~ EndFunc
 
 Func canSalvage($item)
 	Local $r = GetRarity($item)

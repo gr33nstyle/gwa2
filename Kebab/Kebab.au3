@@ -1,5 +1,5 @@
 #include-once
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Inventory.au3"
 #include <GUIConstantsEx.au3> ;for GUI stuff
 #include <WindowsConstants.au3> ;for $SS_CENTER
