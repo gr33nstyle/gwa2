@@ -366,10 +366,14 @@ EndFunc
 ; toggles the rendering state
 ; @return: void
 Func _ToggleRendering()
-	If $Rendering Then
-		_DisableRendering()
+   If $rendering Then
+		DisableRendering()
+		$Rendering = False
+		WinSetState(GetWindowHandle(), "", @SW_HIDE)
 	Else
-		_EnableRendering()
+		EnableRendering()
+		$Rendering = True
+		WinSetState(GetWindowHandle(), "", @SW_SHOW)
 	EndIf
 EndFunc
 
