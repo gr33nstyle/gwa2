@@ -20,13 +20,13 @@ Hero Equipment: -check https://gwpvx.gamepedia.com/Build:Team_-_7_Hero_BiP_Melee
 		-if cheap and lazy, just add +4 Communing +3 Spawning and a 60HP staff to the ST and +1 +2 Blood Magic to the BiP
 
 Player: OgEUQrqeVsSXF9F8E7g5i+GMHBAA
-Hero 1: OAmjAykpZOYTr3jLcCNdmI3bMA (Disable skill 8)
-Hero 2: OAhjQoGYIP3BBQVtZLNncDzxJA
-Hero 3: OAhjYgHaIPPV7QVtZLNncDzqHA
-Hero 4: OQhkAgBqAHK0Jw0TOACYempzQwFA
-Hero 5: OQhkAgBqAHK0Jw0TOACYempzQwFA
-Hero 6: OQhkAgBqAHK0Jw0TOACYempzQgAA
-Hero 7: OgljwomICTXVfDKNLgjC1YhDCA
+Dunkoro: Owkj4oQrpOqE8K13lY9r+14bMA (Disable skill 8)
+Olias: OAhjYgHcoOP1PhlYyJNHmXsxJA
+Livia: OAhiYwh8UzyYxzJn0cYexqeA
+Vekk: OgNDwcPPP1CaRARLWRur1DSC
+Xandra: OAOj4siMpNXzyp30xhxYmuEqPA
+Gwen: OQhkAoB8AGK0EwLACYeGJQGwy3FD
+Ogden: OwUS4YIP+M8K13lY97iVfnA
 
 This is close to the best team you can have here, don't swap heroes around. It's 99% certain that your own setup is worse, 
 	if not contact Stepmother and ask him to explain why your heroes are trash.

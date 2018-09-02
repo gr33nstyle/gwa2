@@ -33,7 +33,6 @@
 #include <GuiEdit.au3>
 #NoTrayIcon
 
-
 #Region Declarations
 Opt("GUIOnEventMode", True)
 Opt("GUICloseOnESC", False)
@@ -81,7 +80,7 @@ $PickUpGoldies = GUICtrlCreateCheckbox("PickUp Goldies", 6, 144, 103, 17)
 $StoreUpgrades = GUICtrlCreateCheckbox("Keep Upgrades", 6, 164, 103, 17)
    GUICtrlSetState($PickUpGoldies, $GUI_CHECKED)
    GUICtrlSetState($StoreUpgrades, $GUI_CHECKED)
-$RenderingBox = GUICtrlCreateCheckbox("Disable Rendering", 6, 124, 103, 17)
+$RenderingBox = GUICtrlCreateCheckbox("Disable Rendering", 6, 999, 103, 17)
    GUICtrlSetOnEvent(-1, "ToggleRendering")
    GUICtrlSetState($RenderingBox, $GUI_DISABLE)
 GUISetOnEvent($GUI_EVENT_CLOSE, "_exit")
@@ -154,7 +153,17 @@ Func GuiButtonHandler()
 			   Exit
 		 EndIf
 	  EndIf
-	  EndIf
+	  $HWND = GetWindowHandle()
+	  GUICtrlSetState($RenderingBox, $GUI_ENABLE)
+	  GUICtrlSetState($CharInput, $GUI_DISABLE)
+	  Local $charname = GetCharname()
+	  GUICtrlSetData($CharInput, $charname, $charname)
+	  GUICtrlSetData($StartButton, "Pause")
+	  WinSetTitle($Gui, "", "Stygian Farm - " & $charname)
+	  $BotRunning = True
+	  $BotInitialized = True
+	  SetMaxMemory()
+   EndIf
 EndFunc
 
 Func Setup()
@@ -1152,6 +1161,16 @@ Func TimeUpdater()
 	GUICtrlSetData($TotTimeCount, $L_Hour & ":" & $L_Min & ":" & $L_Sec)
 EndFunc
 
+Func ToggleRendering()
+   If GUICtrlRead($RenderingBox) == $GUI_UNCHECKED Then
+	  EnableRendering()
+	  WinSetState($HWND, "", @SW_SHOW)
+   Else
+	  DisableRendering()
+	  WinSetState($HWND, "", @SW_HIDE)
+   EndIf
+   Return True
+EndFunc
 
 Func Out($msg)
    GUICtrlSetData($StatusLabel, GUICtrlRead($StatusLabel) & "[" & @HOUR & ":" & @MIN & "]" & " " & $msg & @CRLF)
@@ -1283,30 +1302,4 @@ Func WaitInstanceType($aInstanceType = 0, $aDeadlock = 15000)
 	Return True
 EndFunc   ;==>WaitInstanceType
 
-
-Func ToggleRendering()
-   If GUICtrlRead($RenderingBox) == $GUI_UNCHECKED Then
-	  EnableRendering()
-	  WinSetState($HWND, "", @SW_SHOW)
-   Else
-	  DisableRendering()
-	  WinSetState($HWND, "", @SW_HIDE)
-   EndIf
-   Return True
-EndFunc
-
-Func Out($msg)
-   GUICtrlSetData($StatusLabel, GUICtrlRead($StatusLabel) & "[" & @HOUR & ":" & @MIN & "]" & " " & $msg & @CRLF)
-   _GUICtrlEdit_Scroll($StatusLabel, $SB_SCROLLCARET)
-   _GUICtrlEdit_Scroll($StatusLabel, $SB_LINEUP)
-EndFunc
-
-Func _exit()
-   If GUICtrlRead($RenderingBox) == $GUI_CHECKED Then
-	  EnableRendering()
-	  WinSetState($HWND, "", @SW_SHOW)
-	  Sleep(500)
-   EndIf
-   Exit
-EndFunc
 #EndRegion Functions
