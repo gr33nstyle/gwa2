@@ -813,4 +813,71 @@ Func CheckArrayPscon($lModelID)
 	For $p = 0 To (UBound($Array_pscon) - 1)
 		If ($lModelID == $Array_pscon[$p]) Then Return True
 	Next
-EndFunc   ;==>CheckArrayPscon
+ EndFunc   ;==>CheckArrayPscon
+
+ ;Fixes for new gwa2
+
+Func ToggleRendering()
+	If $render Then
+		DisableRendering()
+		WinSetState(GetWindowHandle(), "", @SW_HIDE)
+		ClearMemory()
+	Else
+		EnableRendering()
+		WinSetState(GetWindowHandle(), "", @SW_SHOW)
+	EndIf
+	$render = Not $render
+EndFunc
+
+ Func GetNumberOfFoesInRangeOfAgent($aAgent = -2, $aRange = 1250)
+	Local $lAgent, $lDistance
+	Local $lCount = 0
+
+	If Not IsDllStruct($aAgent) Then $aAgent = GetAgentByID($aAgent)
+
+	For $i = 1 To GetMaxAgents()
+		$lAgent = GetAgentByID($i)
+		If BitAND(DllStructGetData($lAgent, 'typemap'), 262144) Then ContinueLoop
+		If DllStructGetData($lAgent, 'Type') <> 0xDB Then ContinueLoop
+		If DllStructGetData($lAgent, 'Allegiance') <> 3 Then ContinueLoop
+
+		     If DllStructGetData($lAgent, 'HP') <= 0 Then ContinueLoop
+		If BitAND(DllStructGetData($lAgent, 'Effects'), 0x0010) > 0 Then ContinueLoop
+		$lDistance = GetDistance($lAgent)
+
+		If $lDistance > $aRange Then ContinueLoop
+		$lCount += 1
+	Next
+	Return $lCount
+ EndFunc   ;==>GetNumberOfFoesInRangeOfAgent
+
+Func IsRecharged($lSkill)
+	Return GetSkillbarSkillRecharge($lSkill) == 0
+ EndFunc   ;==>IsRecharged
+
+ Func PickUpLoot()
+	Local $lAgent
+	Local $aitem
+	Local $lDeadlock
+	For $i = 1 To GetMaxAgents()
+		If GetIsDead(-2) Then Return
+		$lAgent = GetAgentByID($i)
+		If DllStructGetData($lAgent, 'Type') <> 0x400 Then ContinueLoop
+		$aitem = GetItemByAgentID($i)
+		If CanPickUp2($aitem) Then
+			PickUpItem($aitem)
+			$lDeadlock = TimerInit()
+			While GetAgentExists($i)
+				Sleep(100)
+				If GetIsDead(-2) Then Return
+				If TimerDiff($lDeadlock) > 10000 Then ExitLoop
+			WEnd
+		EndIf
+	Next
+ EndFunc   ;==>PickUpLoot
+
+ Func _PurgeHook()
+	EnableRendering()
+	Sleep(Random(4000, 5000))
+	DisableRendering()
+ EndFunc   ;==>_PurgeHook

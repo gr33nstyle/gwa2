@@ -5,7 +5,7 @@
 #include <StaticConstants.au3>
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Constants.au3"
 
 Opt("MustDeclareVars", True) 	; have to declare variables with either Local or Global.

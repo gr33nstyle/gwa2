@@ -4,7 +4,7 @@
 #include <StaticConstants.au3>
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Constants.au3"
 
 Opt("MustDeclareVars", True) 	; have to declare variables with either Local or Global.
@@ -24,7 +24,7 @@ Global Const $FinishHim = 6
 Global Const $MainGui = GUICreate("Skelefarm - Jumper", 172, 190)
 	GUICtrlCreateLabel("Skelefarm - Follower", 8, 6, 156, 17, $SS_CENTER)
 	Global Const $inputCharName = GUICtrlCreateCombo("", 8, 24, 150, 22)
-~ 		GUICtrlSetData(-1, GetLoggedCharNames())
+	GUICtrlSetData(-1, GetLoggedCharNames())
 	Global Const $cbxHideGW = GUICtrlCreateCheckbox("Disable Graphics", 8, 48)
 	Global Const $cbxOnTop = GUICtrlCreateCheckbox("Always On Top", 8, 68)
 	GUICtrlCreateLabel("Runs:", 8, 92)

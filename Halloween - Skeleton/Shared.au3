@@ -1,6 +1,6 @@
 
 #include-once
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Constants.au3"
 
 Global $boolRunning = False
@@ -10,7 +10,7 @@ Global $Rendering = True
 Global Const $USED_CITY = $CHANTRY_ID
 Global Const $POSITION_NEAR_AVATAR = $POSITION_NEAR_AVATAR_CHANTRY
 Global Const $POSITION_AVATAR = $POSITION_AVATAR_CHANTRY
-Global Const $MODELID_AVATAR_OF_GRENTH = $MODELID_AVATAR_OF_GRENTH_PANTHEON
+Global Const $MODELID_AVATAR_OF_GRENTH = $MODELID_AVATAR_OF_GRENTH_NORMAL
 
 Global $runs = 0
 Global $fails = 0

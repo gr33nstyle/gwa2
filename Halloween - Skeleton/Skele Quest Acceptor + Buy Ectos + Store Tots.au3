@@ -6,7 +6,7 @@
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
 #include <Math.au3>
-#include "GWA2.au3"
+#include "../GWA2.au3"
 #include "Constants.au3"
 
 
@@ -63,11 +63,11 @@ While 1
 				EctoBuy()
 			EndIf
 		 EndIf
-		 
+
 		 If CountSlots() < 5 Then
 			StoreTricks()
 		 EndIf
-		 
+
 
 		; Inventory check / managment
 		InventoryManagement()
@@ -229,8 +229,8 @@ Func Out($aString)
 	Local $timestamp = "[" & @HOUR & ":" & @MIN & "] "
 	GUICtrlSetData($lblLog, $timestamp & $aString)
  EndFunc   ;==>Out
- 
- 
+
+
  Func EctoBuy()
 	Local $EctoID = 930
 	If GetGoldCharacter() > 97000 Then
@@ -249,7 +249,7 @@ Func Out($aString)
 	EndIf
  EndFunc   ;==>EctoBuy
 
- 
+
  #Region ToT Storage
  Func StoreTricks()
 	TrickOrTreat(1, 20)
@@ -257,7 +257,7 @@ Func Out($aString)
 	TrickOrTreat(3, 10)
 	TrickOrTreat(4, 10)
  EndFunc
- 
+
 Func TrickOrTreat($BAGINDEX, $NUMOFSLOTS)
 	Local $AITEM
 	Local $M
